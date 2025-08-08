@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface VerifierOfficerRepository extends JpaRepository<VerifierOfficer, Long> {
-    Optional<VerifierOfficer> findByUsername(String username);
+    Optional<VerifierOfficer> findByUsername(String username); // optional
+    Optional<VerifierOfficer> findByEmail(String email);       // ✅ hii ndio inahitajika kwenye controller
 }

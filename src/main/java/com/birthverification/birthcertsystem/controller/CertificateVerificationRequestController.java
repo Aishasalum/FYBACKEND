@@ -93,15 +93,21 @@ public class CertificateVerificationRequestController {
             @RequestBody CertificateVerificationRequestDTO dto,
             @RequestParam Long uploadedCertificateId
     ) {
-        Certificate uploadedCert = certificateRepository.findById(uploadedCertificateId)
-                .orElseThrow(() -> new ResourceNotFoundException("Certificate not found with ID: " + uploadedCertificateId));
+        try {
+            // Check certificate first
+            Certificate uploadedCert = certificateRepository.findById(uploadedCertificateId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Certificate not found with ID: " + uploadedCertificateId));
 
-        CertificateVerificationRequest request = requestService.createVerificationRequest(dto);
-        request.setUploadedCertificate(uploadedCert);
+            // Then create request
+            CertificateVerificationRequest request = requestService.createVerificationRequest(dto);
+            request.setUploadedCertificate(uploadedCert);
 
-        return ResponseEntity.ok(requestService.saveWithCertificate(request));
+            return ResponseEntity.ok(requestService.saveWithCertificate(request));
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the actual error
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
     // ✅ Get all (active + deleted) requests — optional
     @GetMapping("/all")
     public ResponseEntity<List<CertificateVerificationRequest>> getAll() {
