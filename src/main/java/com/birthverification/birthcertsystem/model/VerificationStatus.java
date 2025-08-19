@@ -1,7 +1,7 @@
-package com.birthverification.birthcertsystem.model;
-
-public enum VerificationStatus {
-    PENDING,
-    APPROVED,
-    REJECTED
-}
+//package com.birthverification.birthcertsystem.model;
+//
+//public enum VerificationStatus {
+//    PENDING,
+//    APPROVED,
+//    REJECTED
+//}

@@ -83,4 +83,11 @@ public interface CertificateService {
 
     // ✅ Added this method to save/update certificate
     Certificate save(Certificate certificate);
+
+
+    //mpyaaa aaaa aaa
+
+    // ✅ Ongeza hii mpya
+    List<Certificate> getCertificatesByUserId(Long userId);
 }
+

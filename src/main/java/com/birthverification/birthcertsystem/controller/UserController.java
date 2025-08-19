@@ -102,6 +102,157 @@
 //        }
 //    }
 //}
+
+
+
+
+
+//
+//package com.birthverification.birthcertsystem.controller;
+//
+//import com.birthverification.birthcertsystem.model.User;
+//import com.birthverification.birthcertsystem.service.UserService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.util.Optional;
+//import java.util.List;
+//
+//@RestController
+//@RequestMapping("/api/users")
+//@CrossOrigin(origins = "*")
+//public class UserController {
+//
+//    @Autowired
+//    private UserService userService;
+//
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+//
+//    // Register new user
+//    @PostMapping("/register")
+//    public ResponseEntity<?> registerUser(@RequestBody User user) {
+//        if (userService.emailExists(user.getEmail())) {
+//            return ResponseEntity.badRequest().body("Email already exists.");
+//        }
+//
+//        User registeredUser = userService.registerUser(user);
+//        registeredUser.setPassword(null);
+//        return ResponseEntity.ok(registeredUser);
+//    }
+//
+//    // Login
+//    @PostMapping("/login")
+//    public ResponseEntity<?> loginUser(@RequestBody User user) {
+//        Optional<User> existingUser = userService.findByEmail(user.getEmail());
+//
+//        if (existingUser.isPresent()) {
+//            if (passwordEncoder.matches(user.getPassword(), existingUser.get().getPassword())) {
+//                User safeUser = existingUser.get();
+//                safeUser.setPassword(null);
+//                return ResponseEntity.ok(safeUser);
+//            } else {
+//                return ResponseEntity.status(401).body("Invalid password.");
+//            }
+//        } else {
+//            return ResponseEntity.status(404).body("User not found.");
+//        }
+//    }
+//
+//    // Get single active user (exclude deleted)
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+//        Optional<User> user = userService.findActiveUserById(id);
+//        if (user.isPresent()) {
+//            User safeUser = user.get();
+//            safeUser.setPassword(null);
+//            return ResponseEntity.ok(safeUser);
+//        } else {
+//            return ResponseEntity.status(404).body("User not found or deleted.");
+//        }
+//    }
+//
+//    // Get all active users
+//    @GetMapping("/active")
+//    public ResponseEntity<List<User>> getActiveUsers() {
+//        List<User> users = userService.getAllActiveUsers();
+//        users.forEach(u -> u.setPassword(null));
+//        return ResponseEntity.ok(users);
+//    }
+//
+//    // Get all users in Recycle Bin
+//    @GetMapping("/deleted")
+//    public ResponseEntity<List<User>> getDeletedUsers() {
+//        List<User> users = userService.getAllDeletedUsers();
+//        users.forEach(u -> u.setPassword(null));
+//        return ResponseEntity.ok(users);
+//    }
+//
+//    // Get all users (active + deleted)
+//    @GetMapping("/all")
+//    public ResponseEntity<List<User>> getAllUsers() {
+//        List<User> users = userService.getAllUsers();
+//        users.forEach(u -> u.setPassword(null));
+//        return ResponseEntity.ok(users);
+//    }
+//
+//    // Update active user only
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
+//        Optional<User> updatedUser = userService.updateUser(id, user);
+//        if (updatedUser.isPresent()) {
+//            User safeUser = updatedUser.get();
+//            safeUser.setPassword(null);
+//            return ResponseEntity.ok(safeUser);
+//        } else {
+//            return ResponseEntity.status(404).body("User not found or deleted.");
+//        }
+//    }
+//
+//    // Soft delete user (Move to Recycle Bin)
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+//        boolean deleted = userService.deleteUser(id);
+//        if (deleted) {
+//            return ResponseEntity.ok("User soft-deleted (moved to trash).");
+//        } else {
+//            return ResponseEntity.status(404).body("User not found or already deleted.");
+//        }
+//    }
+//
+//    // Restore user from Recycle Bin
+//    @PutMapping("/restore/{id}")
+//    public ResponseEntity<?> restoreUser(@PathVariable Long id) {
+//        boolean restored = userService.restoreUser(id);
+//        if (restored) {
+//            return ResponseEntity.ok("User restored successfully.");
+//        } else {
+//            return ResponseEntity.status(404).body("User not found in trash.");
+//        }
+//    }
+//
+//    // Permanently delete user
+//    @DeleteMapping("/permanent-delete/{id}")
+//    public ResponseEntity<?> permanentlyDeleteUser(@PathVariable Long id) {
+//        boolean deleted = userService.permanentlyDeleteUser(id);
+//        if (deleted) {
+//            return ResponseEntity.ok("User permanently deleted.");
+//        } else {
+//            return ResponseEntity.status(404).body("User not found.");
+//        }
+//    }
+//}
+
+
+
+
+//mpyaaaa na reset paswordddd
+
+
+
+
 package com.birthverification.birthcertsystem.controller;
 
 import com.birthverification.birthcertsystem.model.User;
@@ -111,6 +262,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 
@@ -124,6 +276,8 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    // ===================== Existing Endpoints =====================
 
     // Register new user
     @PostMapping("/register")
@@ -155,7 +309,7 @@ public class UserController {
         }
     }
 
-    // Get single active user (exclude deleted)
+    // Get single active user
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.findActiveUserById(id);
@@ -176,7 +330,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Get all users in Recycle Bin
+    // Get all deleted users
     @GetMapping("/deleted")
     public ResponseEntity<List<User>> getDeletedUsers() {
         List<User> users = userService.getAllDeletedUsers();
@@ -184,7 +338,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Get all users (active + deleted)
+    // Get all users
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -205,7 +359,7 @@ public class UserController {
         }
     }
 
-    // Soft delete user (Move to Recycle Bin)
+    // Soft delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         boolean deleted = userService.deleteUser(id);
@@ -237,4 +391,33 @@ public class UserController {
             return ResponseEntity.status(404).body("User not found.");
         }
     }
+
+    // ===================== New Reset Password Endpoints =====================
+
+    // Send reset password email
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody User user) {
+        boolean sent = userService.sendResetPasswordEmail(user.getEmail());
+        if (sent) {
+            return ResponseEntity.ok("Check your email for reset link.");
+        } else {
+            return ResponseEntity.status(404).body("Email not found.");
+        }
+    }
+
+    // Set new password
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody User user) {
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Password cannot be empty."));
+        }
+
+        boolean updated = userService.updatePassword(user.getEmail(), user.getPassword()); // pass plain text
+        if (updated) {
+            return ResponseEntity.ok(Map.of("message", "Password updated successfully."));
+        } else {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found."));
+        }
+    }
+
 }

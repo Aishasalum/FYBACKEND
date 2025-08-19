@@ -62,4 +62,8 @@ public interface CertificateVerificationRequestRepository extends JpaRepository<
 
     // Optional: Find deleted requests by user
     List<CertificateVerificationRequest> findByUserAndDeletedTrue(User user);
+
+    //validation of certificate number
+
+
 }

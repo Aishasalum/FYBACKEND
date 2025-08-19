@@ -22,4 +22,8 @@ public interface CertificateRepository extends JpaRepository<Certificate, Long> 
     // Pata certificates zote ambazo ziko kwenye trash (deleted = true)
     List<Certificate> findByDeletedTrue();
 
+    // mpyaaa aaa aaaaa aaaa
+
+    List<Certificate> findByUserIdAndDeletedFalse(Long userId);
+
 }

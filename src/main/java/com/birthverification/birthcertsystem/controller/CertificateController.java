@@ -922,4 +922,12 @@ public class CertificateController {
 
         return ResponseEntity.ok("Certificate status updated successfully");
     }
+
+    //mpyaaaaa aaaaa aaaaaa
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Certificate>> getCertificatesByUser(@PathVariable Long userId) {
+        List<Certificate> certificates = certificateService.getCertificatesByUserId(userId);
+        return ResponseEntity.ok(certificates);
+    }
 }

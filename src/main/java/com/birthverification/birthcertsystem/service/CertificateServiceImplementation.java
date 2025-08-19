@@ -281,5 +281,19 @@ public class CertificateServiceImplementation implements CertificateService {
     public Certificate save(Certificate certificate) {
         return certificateRepository.save(certificate);
     }
+
+
+    //mpyaaa aaaa aaaaa
+
+    @Override
+    public List<Certificate> getCertificatesByUserId(Long userId) {
+        // 1. Hakikisha user exists (optional check)
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found with id: " + userId);
+        }
+
+        // 2. Rudisha certificates za user huyo (zisizo soft-deleted)
+        return certificateRepository.findByUserIdAndDeletedFalse(userId);
+    }
 }
 

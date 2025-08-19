@@ -744,4 +744,5 @@ public class CertificateVerificationRequest {
     public void setMatchedRecord(BirthCertificateRecord matchedRecord) {
         this.matchedRecord = matchedRecord;
     }
+
 }

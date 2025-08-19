@@ -1,7 +1,9 @@
 package com.birthverification.birthcertsystem.model;
 
+import com.birthverification.birthcertsystem.enums.NotificationType;
 import jakarta.persistence.*;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,33 +15,31 @@ public class Notification {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private String channel;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String message;
 
-    private LocalDateTime sentAt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NotificationStatus status = NotificationStatus.UNREAD;
 
     @Enumerated(EnumType.STRING)
-    private NotificationStatus status = NotificationStatus.PENDING;
+    @Column(nullable = false)
+    private NotificationType type = NotificationType.POPUP; // POPUP or EMAIL
 
-    // Constructors
-    public Notification() {
-    }
+    @Column(name = "related_request_id")
+    private Long relatedRequestId; // Link to CertificateVerificationRequest.id
 
-    public Notification(Long id, User user, String channel, String message, LocalDateTime sentAt, NotificationStatus status) {
-        this.id = id;
-        this.user = user;
-        this.channel = channel;
-        this.message = message;
-        this.sentAt = sentAt;
-        this.status = status;
-    }
+    @Column(name = "read_at")
+    private LocalDateTime readAt; // Optional: when user read notification
 
-    // Getters and Setters
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    // ===================== Getters & Setters =====================
+
     public Long getId() {
         return id;
     }
@@ -56,14 +56,6 @@ public class Notification {
         this.user = user;
     }
 
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -72,19 +64,47 @@ public class Notification {
         this.message = message;
     }
 
-    public LocalDateTime getSentAt() {
-        return sentAt;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
-    }
-
     public NotificationStatus getStatus() {
         return status;
     }
 
     public void setStatus(NotificationStatus status) {
+        this.status = status;
+    }
+
+    public com.birthverification.birthcertsystem.enums.NotificationType getType() {
+        return type;
+    }
+
+    public void setType(NotificationType type) {
+        this.type = type;
+    }
+
+    public Long getRelatedRequestId() {
+        return relatedRequestId;
+    }
+
+    public void setRelatedRequestId(Long relatedRequestId) {
+        this.relatedRequestId = relatedRequestId;
+    }
+
+    public LocalDateTime getReadAt() {
+        return readAt;
+    }
+
+    public void setReadAt(LocalDateTime readAt) {
+        this.readAt = readAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setStatus(com.birthverification.birthcertsystem.enums.NotificationStatus read) {
         this.status = status;
     }
 }
